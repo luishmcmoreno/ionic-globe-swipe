@@ -1,15 +1,8 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
 <ion-content>
+  <p margin-top padding-top ion-text color="white" text-center>Swipe to right or left to see more events</p>
   <section class="content" (swipe)="onSwipe($event)">
     <canvas id='rotatingGlobe' width='400' height='400'
     style='width: 100%; height: auto; cursor: move;'></canvas>
   </section>
-  <h2 text-center> {{ campus[index].title }} </h2>
+  <h2 text-center ion-text color="white"> {{ campus[index].title }} </h2>
 </ion-content>

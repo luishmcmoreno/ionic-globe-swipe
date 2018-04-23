@@ -148,9 +148,9 @@ export class HomePage {
       this.rotateLat(country);
       this.rotateLng(country);
     }
-    this.globe.plugins.pings.add(lng, lat, { color: '#FFFF33', ttl: 2000, angle: Math.random() * 10 });
+    this.globe.plugins.pings.add(lng, lat, { color: '#0099FF', ttl: 2000, angle: Math.random() * 10 });
     this.currentInterval = setInterval(() => {
-      this.globe.plugins.pings.add(lng, lat, { color: '#FFFF33', ttl: 2000, angle: Math.random() * 10 });
+      this.globe.plugins.pings.add(lng, lat, { color: '#0099FF', ttl: 2000, angle: Math.random() * 10 });
     }, 500);
   }
 
@@ -158,10 +158,28 @@ export class HomePage {
     this.globe = planetaryjs.planet();
     this.globe.loadPlugin(planetaryjs.plugins.earth({
       topojson: { file:   'assets/js/world-110m.json' },
-      oceans:   { fill:   '#000080' },
-      land:     { fill:   '#339966' },
-      borders:  { stroke: '#008000' }
+      oceans:   { fill:   '#ffffff' },
+      land:     { fill:   '#B9B9B9' },
+      borders:  { stroke: '#ffffff' }
     }));
+
+    var somePlugin = function(planet) {
+      planet.onDraw(function() {
+        planet.withSavedContext(function(context) {
+          context.beginPath();
+          planet.path.context(context)({type: 'Sphere'});
+          console.log(context);
+          
+          context.beginPath();
+          context.moveTo(0,0);
+          context.lineTo(180,0);
+          context.stroke();
+        });
+      });
+    };
+
+    this.globe.loadPlugin(somePlugin);
+
     this.globe.loadPlugin(planetaryjs.plugins.pings());
     this.globe.loadPlugin(planetaryjs.plugins.zoom({
       scaleExtent: [100, 300]
@@ -172,7 +190,7 @@ export class HomePage {
     this.currentLng = country.lng;
 
     this.currentInterval = setInterval(() => {
-      this.globe.plugins.pings.add(country.lng, country.lat, { color: '#FFFF33', ttl: 2000, angle: Math.random() * 10 });
+      this.globe.plugins.pings.add(country.lng, country.lat, { color: '#0099FF', ttl: 2000, angle: Math.random() * 10 });
     }, 500);
 
     this.globe.projection.scale(175).translate([200, 200]).rotate([country.lng * -1, country.lat * -1]);
