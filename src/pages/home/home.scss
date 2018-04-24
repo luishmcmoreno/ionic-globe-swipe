@@ -1,4 +1,9 @@
 page-home {
+
+    .scroll-content {
+        overflow-y: hidden !important;
+    }
+
     .content {
         background: url(assets/imgs/wave.svg) no-repeat center bottom  #0099FF;
         background-size: contain;
