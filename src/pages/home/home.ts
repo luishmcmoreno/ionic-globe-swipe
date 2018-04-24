@@ -8,18 +8,19 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  static readonly rotateTime = 50;
-  static readonly rotateUpdateTime = 1;
+  static readonly rotateTime = 10;
   static readonly FIXEDLAT = -10;
   
   globe: any;
+  isRotatingLeft: boolean = false;
+  isRotatingRight: boolean = false;
   canvas: HTMLCanvasElement;
   currentInterval: number;
   index = 0;
   campus = campus;
+  currentCountry;
   currentLat;
   currentLng;
-  intervals: number[] = [];
   animationClasses = {
     slideInLeft: false,
     slideOutRight: false,
@@ -52,6 +53,8 @@ export class HomePage {
   }
 
   rotateLngToLeft(country) {
+    this.isRotatingLeft = false;
+    this.isRotatingRight = false;
     this.animationClasses.slideOutRight = true;
     setTimeout(() => {
       this.zone.run(() => {
@@ -61,24 +64,12 @@ export class HomePage {
         this.animationClasses.slideInLeft = true;
       });
     }, 400);
-    console.log('rotating to left');
-    const diference = Math.abs(this.currentLng - country.lng);
-    const step = diference/(HomePage.rotateTime/HomePage.rotateUpdateTime);
-    const interval = setInterval(() => {
-      this.zone.run(() => {
-        if (this.currentLng - step > country.lng) {
-          this.currentLng -= step;
-        } else {
-          this.currentLng = country.lng;
-          clearInterval(interval);
-        }
-        this.globe.projection.rotate([-this.currentLng, HomePage.FIXEDLAT]);
-      });
-    }, HomePage.rotateUpdateTime);
-    this.intervals.push(interval);
+    this.isRotatingLeft = true;
   }
 
   rotateLngToRight(country) {
+    this.isRotatingLeft = false;
+    this.isRotatingRight = false;
     this.animationClasses.slideOutLeft = true;
     setTimeout(() => {
       this.zone.run(() => {
@@ -88,21 +79,7 @@ export class HomePage {
         this.animationClasses.slideInRight = true;
       });
     }, 400);
-    console.log('rotating to right');
-    const diference = Math.abs(this.currentLng - country.lng);
-    const step = diference/(HomePage.rotateTime/HomePage.rotateUpdateTime);
-    const interval = setInterval(() => {
-      this.zone.run(() => {
-        if (this.currentLng + step < country.lng) {
-          this.currentLng += step;
-        } else {
-          this.currentLng = country.lng;
-          clearInterval(interval);
-        }
-        this.globe.projection.rotate([-this.currentLng, HomePage.FIXEDLAT]);
-      });
-    }, HomePage.rotateUpdateTime);
-    this.intervals.push(interval);
+    this.isRotatingRight = true;
   }
 
   onSwipe(ev) {
@@ -121,14 +98,11 @@ export class HomePage {
   loadCountry(country) {
     const lat = country.lat;
     const lng = country.lng;
-    for (const interval of this.intervals) {
-      clearInterval(interval);
-    }
+
     clearInterval(this.currentInterval);
     if (this.currentLat && this.currentLng) {
       this.rotateLng(country);
     }
-    this.intervals = [];
     this.globe.plugins.pings.add(lng, lat, { color: '#ee3442', ttl: 2000, angle: Math.random() * 10 });
     this.currentInterval = setInterval(() => {
       this.globe.plugins.pings.add(lng, lat, { color: '#ee3442', ttl: 2000, angle: Math.random() * 10 });
@@ -148,30 +122,13 @@ export class HomePage {
       land:     { fill:   '#B9B9B9' },
       borders:  { stroke: '#ffffff' }
     }));
-
-    // var somePlugin = function(planet) {
-    //   planet.onDraw(function() {
-    //     planet.withSavedContext(function(context) {
-    //       context.beginPath();
-    //       planet.path.context(context)({type: 'Sphere'});
-    //       console.log(context);
-          
-    //       context.beginPath();
-    //       context.moveTo(0,0);
-    //       context.lineTo(180,0);
-    //       context.stroke();
-    //     });
-    //   });
-    // };
-
-    // this.globe.loadPlugin(somePlugin);
-
+    
     this.globe.loadPlugin(planetaryjs.plugins.pings());
     this.globe.loadPlugin(planetaryjs.plugins.zoom({
       scaleExtent: [100, 300]
     }));
 
-    const country = this.campus[this.index];
+    let country = this.campus[this.index];
     this.currentLat = country.lat;
     this.currentLng = country.lng;
 
@@ -182,7 +139,38 @@ export class HomePage {
     this.globe.projection.scale(175).translate([200, 200]).rotate([country.lng * -1, HomePage.FIXEDLAT]);
     this.canvas = document.getElementById('rotatingGlobe') as HTMLCanvasElement;
     this.globe.draw(this.canvas);
-    
+    this.currentCountry = country;
+
+    this.globe.onDraw(() => {
+      if (!this.isRotatingLeft && !this.isRotatingRight) {
+        return;
+      }
+
+      const diference = Math.abs(this.currentLng - country.lng);
+      const step = diference/(HomePage.rotateTime);
+      country = this.campus[this.index];
+
+      // Rotating to Left
+      if (this.currentLng - step > country.lng) {
+        this.currentLng -= step;
+      } else if (this.isRotatingLeft) {
+        this.currentLng = country.lng;
+        this.isRotatingLeft = false;
+        this.currentCountry = country;
+      }
+
+      // Rotating to Right
+      if (this.currentLng + step < country.lng) {
+        this.currentLng += step;
+      } else if (this.isRotatingRight) {
+        this.currentLng = country.lng;
+        this.isRotatingRight = false;
+        this.currentCountry = country;
+      }
+
+      this.globe.projection.rotate([-this.currentLng, HomePage.FIXEDLAT]);
+    });
+
   }
 
   ionViewDidLoad() {

@@ -5,6 +5,21 @@ export const campus = [
         lng: -121.979514,
     },
     {
+        title: 'Canada',
+        lat: 52.393336,
+        lng: -111.839054,
+    },
+    {
+        title: 'Mexico',
+        lat: 19.255141,
+        lng: -98.486093,
+    },
+    {
+        title: 'Brasil',
+        lat: -23.565774,
+        lng: -46.876192,
+    },
+    {
         title: 'Espanha',
         lat: 40.332506,
         lng: -4.016935,
