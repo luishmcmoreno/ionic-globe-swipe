@@ -8,8 +8,8 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  static readonly rotateTime = 200;
-  static readonly rotateUpdateTime = 10;
+  static readonly rotateTime = 50;
+  static readonly rotateUpdateTime = 1;
 
   globe: any;
   canvas: HTMLCanvasElement;
@@ -163,22 +163,22 @@ export class HomePage {
       borders:  { stroke: '#ffffff' }
     }));
 
-    var somePlugin = function(planet) {
-      planet.onDraw(function() {
-        planet.withSavedContext(function(context) {
-          context.beginPath();
-          planet.path.context(context)({type: 'Sphere'});
-          console.log(context);
+    // var somePlugin = function(planet) {
+    //   planet.onDraw(function() {
+    //     planet.withSavedContext(function(context) {
+    //       context.beginPath();
+    //       planet.path.context(context)({type: 'Sphere'});
+    //       console.log(context);
           
-          context.beginPath();
-          context.moveTo(0,0);
-          context.lineTo(180,0);
-          context.stroke();
-        });
-      });
-    };
+    //       context.beginPath();
+    //       context.moveTo(0,0);
+    //       context.lineTo(180,0);
+    //       context.stroke();
+    //     });
+    //   });
+    // };
 
-    this.globe.loadPlugin(somePlugin);
+    // this.globe.loadPlugin(somePlugin);
 
     this.globe.loadPlugin(planetaryjs.plugins.pings());
     this.globe.loadPlugin(planetaryjs.plugins.zoom({

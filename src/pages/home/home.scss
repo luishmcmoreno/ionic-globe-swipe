@@ -1,5 +1,57 @@
 page-home {
     .content {
-        background: #0099FF;
+        background: url(assets/imgs/wave.svg) no-repeat center bottom  #0099FF;
+        background-size: contain;
+    }
+
+    .globe {
+        margin: 0 auto;
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    canvas {
+        width: 100%;
+        margin: 0 auto;
+        height: auto;
+        cursor: move;
+    }
+
+    .cplogo {
+        position: relative;
+        background: rgba(255,255,255, 0.6);
+        width: 80%;
+        margin: 0 auto;
+        border-radius: 20px;
+        text-align: center;
+        color: #0099FF;
+        padding-top: 20px;
+        img {
+            width: 100%;
+        }
+        .img-block {
+            display: inline-block;
+            position: relative;
+            width: 50%;
+        }
+        .edition {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            text-align: right;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .righticon {
+            position: absolute;
+            right: 20px;
+            $icon-size: 36px;
+            font-size: $icon-size;
+            height: $icon-size;
+            line-height: $icon-size;
+            top: calc(50% - 18px);
+        }
     }
 }

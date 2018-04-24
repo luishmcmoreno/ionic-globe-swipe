@@ -1,8 +1,17 @@
 <ion-content>
   <p margin-top padding-top ion-text color="white" text-center>Swipe to right or left to see more events</p>
-  <section class="content" (swipe)="onSwipe($event)">
-    <canvas id='rotatingGlobe' width='400' height='400'
-    style='width: 100%; height: auto; cursor: move;'></canvas>
+  <section class="home-content" (swipe)="onSwipe($event)">
+    <div class="globe">
+      <canvas id="rotatingGlobe" width="400" height="400"></canvas>
+    </div>
+    <h2 text-center ion-text color="white" class="cplogo"> 
+      <span class="img-block">
+        <img src="assets/imgs/cp-logo.png" alt="Campus Party Logo">
+        <span class="edition">
+          {{ campus[index].title }}
+        </span>
+      </span>
+      <ion-icon name="ios-arrow-forward" color="white" class="righticon"></ion-icon>
+    </h2>
   </section>
-  <h2 text-center ion-text color="white"> {{ campus[index].title }} </h2>
 </ion-content>
